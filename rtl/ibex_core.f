@@ -7,6 +7,7 @@ ibex_alu.sv
 ibex_compressed_decoder.sv
 ibex_controller.sv
 ibex_counter.sv
+ibex_counter_flop_xilinx.sv
 ibex_cs_registers.sv
 ibex_decoder.sv
 ibex_ex_block.sv

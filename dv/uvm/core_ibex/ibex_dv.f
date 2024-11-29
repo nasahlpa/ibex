@@ -84,6 +84,7 @@ ${PRJ_DIR}/rtl/ibex_controller.sv
 ${PRJ_DIR}/rtl/ibex_csr.sv
 ${PRJ_DIR}/rtl/ibex_cs_registers.sv
 ${PRJ_DIR}/rtl/ibex_counter.sv
+${PRJ_DIR}/rtl/ibex_counter_flop_xilinx.sv
 ${PRJ_DIR}/rtl/ibex_decoder.sv
 ${PRJ_DIR}/rtl/ibex_dummy_instr.sv
 ${PRJ_DIR}/rtl/ibex_ex_block.sv
