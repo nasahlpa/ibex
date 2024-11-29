@@ -24,7 +24,7 @@ module ibex_counter #(
   logic [CounterWidth-1:0] counter_upd;
   logic [63:0]             counter_load;
   logic                    we;
-  logic [CounterWidth-1:0] counter_d;
+  logic [CounterWidth-1:0] counter_d, counter_q;
 
   // Increment
   assign counter_upd = counter[CounterWidth-1:0] + {{CounterWidth - 1{1'b0}}, 1'b1};
@@ -52,31 +52,25 @@ module ibex_counter #(
 
 `ifdef FPGA_XILINX
   // On Xilinx FPGAs, 48-bit DSPs are available that can be used for the
-  // counter.
-  if (CounterWidth < 49) begin : g_dsp_counter
-    // Set DSP pragma for supported xilinx FPGAs
-    (* use_dsp = "yes" *) logic [CounterWidth-1:0] counter_q;
-    // DSP output register requires synchronous reset.
-    `define COUNTER_FLOP_RST posedge clk_i
-  end else begin : g_no_dsp_counter
-    (* use_dsp = "no" *) logic [CounterWidth-1:0] counter_q;
-    `define COUNTER_FLOP_RST posedge clk_i or negedge rst_ni
-  end
+  // counter. Hence, use Xilinx specific flop implementation.
+  ibex_counter_flop_xilinx #(
+    .CounterWidth (CounterWidth)
+  ) u_ibex_cnt_ff_xilinx (
+    .clk_i     (clk_i),
+    .rst_ni    (rst_ni),
+    .counter_i (counter_d),
+    .counter_o (counter_q)
+  );
 `else
-  logic [CounterWidth-1:0] counter_q;
-
-  `define COUNTER_FLOP_RST posedge clk_i or negedge rst_ni
+  ibex_counter_flop_generic #(
+    .CounterWidth (CounterWidth)
+  ) u_ibex_cnt_ff_generic (
+    .clk_i     (clk_i),
+    .rst_ni    (rst_ni),
+    .counter_i (counter_d),
+    .counter_o (counter_q)
+  );
 `endif
-
-  // Counter flop
-  always_ff @(`COUNTER_FLOP_RST) begin
-  `undef COUNTER_FLOP_RST
-    if (!rst_ni) begin
-      counter_q <= '0;
-    end else begin
-      counter_q <= counter_d;
-    end
-  end
 
   if (CounterWidth < 64) begin : g_counter_narrow
     logic [63:CounterWidth] unused_counter_load;

@@ -10,6 +10,8 @@ ibex:
     rtl/ibex_controller.sv,
     rtl/ibex_cs_registers.sv,
     rtl/ibex_counters.sv,
+    rtl/ibex_counter_flop_generic.sv,
+    rtl/ibex_counter_flop_xilinx.sv,
     rtl/ibex_decoder.sv,
     rtl/ibex_ex_block.sv,
     rtl/ibex_id_stage.sv,
