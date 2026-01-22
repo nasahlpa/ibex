@@ -163,7 +163,21 @@ Instantiation Template
       .alert_minor_o          (),
       .alert_major_internal_o (),
       .alert_major_bus_o      (),
-      .core_sleep_o           ()
+      .core_sleep_o           (),
+
+      // Lockstep signals
+      .lockstep_cmp_en_o      (),
+
+      // Shadow core data interface outputs
+      .data_req_shadow_o      (),
+      .data_we_shadow_o       (),
+      .data_be_shadow_o       (),
+      .data_addr_shadow_o     (),
+      .data_wdata_shadow_o    (),
+
+      // Shadow core instruction interface outputs
+      .instr_req_shadow_o     (),
+      .instr_addr_shadow_o    ()
   );
 
 Parameters
