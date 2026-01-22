@@ -34,6 +34,8 @@ module ibex_top import ibex_pkg::*; #(
   parameter bit                     DbgTriggerEn                 = 1'b0,
   parameter int unsigned            DbgHwBreakNum                = 1,
   parameter bit                     SecureIbex                   = 1'b0,
+  parameter bit                     MemECC                       = SecureIbex,
+  parameter int unsigned            MemDataWidth                 = MemECC ? 32 + 7 : 32,
   parameter bit                     ICacheScramble               = 1'b0,
   parameter int unsigned            ICacheScrNumPrinceRoundsHalf = 2,
   parameter lfsr_seed_t             RndCnstLfsrSeed              = RndCnstLfsrSeedDefault,
@@ -162,7 +164,21 @@ module ibex_top import ibex_pkg::*; #(
   output logic                                                        core_sleep_o,
 
   // DFT bypass controls
-  input logic                                                         scan_rst_ni
+  input logic                                                         scan_rst_ni,
+
+  // Lockstep signals
+  output ibex_mubi_t                                                  lockstep_cmp_en_o,
+
+  // Shadow core data interface outputs
+  output logic                                                        data_req_shadow_o,
+  output logic                                                        data_we_shadow_o,
+  output logic [3:0]                                                  data_be_shadow_o,
+  output logic [31:0]                                                 data_addr_shadow_o,
+  output logic [MemDataWidth-1:0]                                     data_wdata_shadow_o,
+
+  // Shadow core instruction interface outputs
+  output logic                                                        instr_req_shadow_o,
+  output logic [31:0]                                                 instr_addr_shadow_o
 );
 
   localparam bit          Lockstep              = SecureIbex;
@@ -172,8 +188,6 @@ module ibex_top import ibex_pkg::*; #(
   localparam bit          RegFileWrenCheck      = SecureIbex;
   localparam bit          RegFileRdataMuxCheck  = SecureIbex;
   localparam int unsigned RegFileDataWidth      = RegFileECC ? 32 + 7 : 32;
-  localparam bit          MemECC                = SecureIbex;
-  localparam int unsigned MemDataWidth          = MemECC ? 32 + 7 : 32;
   // Icache parameters
   localparam int unsigned BusSizeECC        = ICacheECC ? (BUS_SIZE + 7) : BUS_SIZE;
   localparam int unsigned LineSizeECC       = BusSizeECC * IC_LINE_BEATS;
@@ -1123,7 +1137,16 @@ module ibex_top import ibex_pkg::*; #(
       .alert_major_bus_o      (lockstep_alert_major_bus_local),
       .core_busy_i            (core_busy_local),
       .test_en_i              (test_en_i),
-      .scan_rst_ni            (scan_rst_ni)
+      .scan_rst_ni            (scan_rst_ni),
+
+      .lockstep_cmp_en_o      (lockstep_cmp_en_o),
+      .data_req_shadow_o      (data_req_shadow_o),
+      .data_we_shadow_o       (data_we_shadow_o),
+      .data_be_shadow_o       (data_be_shadow_o),
+      .data_addr_shadow_o     (data_addr_shadow_o),
+      .data_wdata_shadow_o    (data_wdata_shadow_o),
+      .instr_req_shadow_o     (instr_req_shadow_o),
+      .instr_addr_shadow_o    (instr_addr_shadow_o)
     );
 
     prim_buf u_prim_buf_alert_minor (
