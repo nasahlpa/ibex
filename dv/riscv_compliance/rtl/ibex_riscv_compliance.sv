@@ -28,6 +28,7 @@ module ibex_riscv_compliance (
   parameter bit WritebackStage            = 1'b0;
   parameter bit ICache                    = 1'b0;
   parameter bit ICacheECC                 = 1'b0;
+  parameter bit ICacheTweakInfection      = 1'b0;
   parameter bit BranchPredictor           = 1'b0;
   parameter bit SecureIbex                = 1'b0;
   parameter int unsigned LockstepOffset   = 1;
@@ -139,28 +140,29 @@ module ibex_riscv_compliance (
   end
 
   ibex_top_tracing #(
-      .PMPEnable        (PMPEnable         ),
-      .PMPGranularity   (PMPGranularity    ),
-      .PMPNumRegions    (PMPNumRegions     ),
-      .MHPMCounterNum   (MHPMCounterNum    ),
-      .MHPMCounterWidth (MHPMCounterWidth  ),
-      .RV32E            (RV32E             ),
-      .RV32M            (RV32M             ),
-      .RV32B            (RV32B             ),
-      .RegFile          (RegFile           ),
-      .BranchTargetALU  (BranchTargetALU   ),
-      .WritebackStage   (WritebackStage    ),
-      .ICache           (ICache            ),
-      .ICacheECC        (ICacheECC         ),
-      .BranchPredictor  (BranchPredictor   ),
-      .DbgTriggerEn     (DbgTriggerEn      ),
-      .SecureIbex       (SecureIbex        ),
-      .LockstepOffset   (LockstepOffset    ),
-      .ICacheScramble   (ICacheScramble    ),
-      .DmBaseAddr       (32'h00000000      ),
-      .DmAddrMask       (32'h00000003      ),
-      .DmHaltAddr       (32'h00000000      ),
-      .DmExceptionAddr  (32'h00000000      )
+      .PMPEnable            (PMPEnable           ),
+      .PMPGranularity       (PMPGranularity      ),
+      .PMPNumRegions        (PMPNumRegions       ),
+      .MHPMCounterNum       (MHPMCounterNum      ),
+      .MHPMCounterWidth     (MHPMCounterWidth    ),
+      .RV32E                (RV32E               ),
+      .RV32M                (RV32M               ),
+      .RV32B                (RV32B               ),
+      .RegFile              (RegFile             ),
+      .BranchTargetALU      (BranchTargetALU     ),
+      .WritebackStage       (WritebackStage      ),
+      .ICache               (ICache              ),
+      .ICacheECC            (ICacheECC           ),
+      .ICacheTweakInfection (ICacheTweakInfection),
+      .BranchPredictor      (BranchPredictor     ),
+      .DbgTriggerEn         (DbgTriggerEn        ),
+      .SecureIbex           (SecureIbex          ),
+      .LockstepOffset       (LockstepOffset      ),
+      .ICacheScramble       (ICacheScramble      ),
+      .DmBaseAddr           (32'h00000000        ),
+      .DmAddrMask           (32'h00000003        ),
+      .DmHaltAddr           (32'h00000000        ),
+      .DmExceptionAddr      (32'h00000000        )
     ) u_top (
       .clk_i                     (clk_sys              ),
       .rst_ni                    (rst_sys_n            ),
